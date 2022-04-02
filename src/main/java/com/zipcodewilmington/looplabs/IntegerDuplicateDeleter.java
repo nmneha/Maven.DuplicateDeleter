@@ -32,10 +32,21 @@ public final class IntegerDuplicateDeleter extends DuplicateDeleter<Integer> {
 
     @Override
     public Integer[] removeDuplicatesExactly(int exactNumberOfDuplications) {
-        return new Integer[0];
+        int count = 0;
+        Integer[] toRemove = Arrays.copyOf(super.array, super.array.length);
+        for(int i = 0; i < toRemove.length; i++ ) {
+            count = getNumberOfOccurrences(toRemove, toRemove[i]);
+            if (count == exactNumberOfDuplications) {
+                toRemove = removeValue(toRemove, toRemove[i]);
+                i--;
+            }
+        }
+
+        Integer[] removed = Arrays.copyOf(toRemove, toRemove.length);
+        return removed;
     }
 
-    public static Integer getNumberOfOccurrences(Integer[] intArray, int intToCount) {
+    public Integer getNumberOfOccurrences(Integer[] intArray, int intToCount) {
         Integer count = 0;
         for (int i = 0; i < intArray.length; i++) {
             if(intArray[i].equals(intToCount)) {

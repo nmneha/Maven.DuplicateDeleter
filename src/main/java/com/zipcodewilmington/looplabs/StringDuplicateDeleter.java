@@ -1,6 +1,7 @@
 package com.zipcodewilmington.looplabs;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Created by leon on 1/28/18.
@@ -30,10 +31,21 @@ public final class StringDuplicateDeleter extends DuplicateDeleter<String> {
 
     @Override
     public String[] removeDuplicatesExactly(int exactNumberOfDuplications) {
-        return new String[0];
+        int count = 0;
+        String[] toRemove = Arrays.copyOf(super.array, super.array.length);
+        for(int i = 0; i < toRemove.length; i++ ) {
+            count = getNumberOfOccurrences(toRemove, toRemove[i]);
+            if (count == exactNumberOfDuplications) {
+                toRemove = removeValue(toRemove, toRemove[i]);
+                i--;
+            }
+        }
+
+        String[] removed = Arrays.copyOf(toRemove, toRemove.length);
+        return removed;
     }
 
-    public static Integer getNumberOfOccurrences(String[] intArray, String intToCount) {
+    public Integer getNumberOfOccurrences(String[] intArray, String intToCount) {
         Integer count = 0;
         for (int i = 0; i < intArray.length; i++) {
             if(intArray[i].equals(intToCount)) {
@@ -48,13 +60,12 @@ public final class StringDuplicateDeleter extends DuplicateDeleter<String> {
         String[] resultArray = new String[intArray.length
                 - getNumberOfOccurrences(intArray, intToRemove)];
         int count = 0;
-        for (int i = 0; i < intArray.length; i++) {
-            if (intToRemove != intArray[i]) {
-                resultArray[count] = intArray[i];
+        for (String s : intArray) {
+            if (!Objects.equals(intToRemove, s)) {
+                resultArray[count] = s;
                 count++;
             }
         }
-        String[] integerArray = Arrays.copyOf(resultArray, resultArray.length, String[].class);
-        return integerArray;
+        return Arrays.copyOf(resultArray, resultArray.length, String[].class);
     }
 }
